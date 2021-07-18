@@ -1,0 +1,61 @@
+{% extends 'application/base.html' %}
+
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/users/users.css' %}"/>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="jumbotron jumbo-container" style="min-height: 90vh;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>User Administration</h2>
+                    </div>
+                    <div class="col-md-5 offset-md-3" id="user-search-form">
+                        <form action="{% url 'subby:user_index' %}" method="GET">
+                            <div class="form-group">
+                                {% if query %}
+                                    <input class="form-control" type="search" placeholder="{{ query }}" aria-label="User Filter" name="query">
+                                {% else %}
+                                    <input class="form-control" type="search" placeholder="Search" aria-label="User Filter" name="query">
+                                {% endif %}
+
+                                <button class="btn btn-secondary search-btn" id="user-search-button" type="submit">Search</button>
+
+                                {% if query %}
+                                    <a href="{% url 'subby:user_index' %}">
+                                        <button class="btn btn-secondary search-btn" id="user-search-clear">Clear</button>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                    {% if users %}
+                        <div class="row">
+                            <div class="col-md-4"><h5>Email</h5></div>
+                            <div class="col-md-4"><h5>First Name</h5></div>
+                            <div class="col-md-4"><h5>Last Name</h5></div>
+                        </div>
+                        {% for user in users %}
+                            <div class="row user-row" onclick="window.location='{% url 'subby:user_show' user.id %}';">
+                                <div class="col-md-4">
+                                    <span>{{ user.email }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{% if user.first_name != None %} {{ user.first_name }} {% else %} {% endif %}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{% if user.last_name != None %} {{ user.last_name }} {% else %} {% endif %}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <h5>No users to show</h5>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
